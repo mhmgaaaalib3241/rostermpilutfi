@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Roster Semester 1 MPI A - Manajemen Pendidikan Islam</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #2d3748;
+  }
+  .container {
+    max-width: 1400px;
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #4c1d95;
+    margin-bottom: 15px;
+  }
+  .instructions {
+    background: #faf5ff;
+    border: 1px solid #d6bcfa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    color: #6b46c1;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .week-selector {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  select {
+    padding: 8px 14px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e0;
+    outline: none;
+    transition: border-color 0.3s ease;
+    min-width: 140px;
+  }
+  select:focus {
+    border-color: #6b46c1;
+    box-shadow: 0 0 8px #6b46c1aa;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.9rem;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px 8px;
+    vertical-align: top;
+    word-wrap: break-word;
+  }
+  th {
+    background: #6b46c1;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+  }
+  td textarea, td input[type="text"], td input[type="url"], td select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  td textarea {
+    min-height: 50px;
+  }
+  td input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 6px;
+    cursor: pointer;
+  }
+  .dosen {
+    color: #805ad5;
+    font-weight: 600;
+    font-style: italic;
+  }
+  .jam {
+    color: #9f7aea;
+    font-weight: 600;
+  }
+  .barcode-preview {
+    max-width: 120px;
+    max-height: 120px;
+    margin-top: 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: block;
+  }
+  button {
+    background: #6b46c1;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4);
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #553c9a;
+  }
+  label.inline-flex {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  @media print {
+    body {
+      background: white !important;
+      padding: 0 !important;
+    }
+    .container {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+    button, .week-selector, .instructions {
+      display: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Roster Semester 1 MPI A">
+    <h1>Roster Semester 1 - MPI A</h1>
+
+    <div class="instructions" role="region" aria-live="polite">
+      <strong>Petunjuk Penggunaan:</strong>
+      <ol class="list-decimal list-inside">
+        <li>Pilih <em>Minggu Aktif</em> di dropdown untuk mengisi data minggu tersebut.</li>
+        <li>Isi kolom <strong>Perubahan Jadwal</strong> jika ada perubahan hari, jam, atau mata kuliah.</li>
+        <li>Centang <em>Ada Tugas</em> jika ada tugas, lalu isi deskripsi tugas dan centang <em>Selesai</em> jika sudah selesai.</li>
+        <li>Pilih status <em>Kehadiran</em> (Masuk Kelas / Tidak Masuk).</li>
+        <li>Masukkan URL link rangkuman materi atau gambar barcode pada kolom <em>Link / Barcode</em>. Preview gambar akan muncul otomatis.</li>
+        <li>Isi kolom <em>Keterangan</em> untuk catatan tambahan.</li>
+        <li>Setelah selesai mengisi, klik tombol <strong>Simpan Semua Data</strong> untuk menyimpan data di browser Anda.</li>
+        <li>Data tersimpan otomatis dan dapat diakses kembali saat membuka halaman ini.</li>
+      </ol>
+    </div>
+
+    <div class="week-selector">
+      <label for="week-select" class="font-semibold text-purple-700">Pilih Minggu Aktif: </label>
+      <select id="week-select" aria-label="Pilih minggu aktif">
+        <option value="1">Minggu 1</option>
+        <option value="2">Minggu 2</option>
+        <option value="3">Minggu 3</option>
+        <option value="4">Minggu 4</option>
+        <option value="5">Minggu 5</option>
+        <option value="6">Minggu 6</option>
+      </select>
+    </div>
+
+    <table aria-describedby="desc-roster" class="table-fixed">
+      <caption id="desc-roster" class="sr-only">Tabel jadwal mata kuliah dengan kolom perubahan jadwal, tugas, kehadiran, link/barcode, dan keterangan</caption>
+      <thead>
+        <tr>
+          <th class="w-1/12">Hari & Jam</th>
+          <th class="w-2/12">Mata Kuliah</th>
+          <th class="w-2/12">Dosen</th>
+          <th class="w-2/12">Perubahan Jadwal</th>
+          <th class="w-2/12">Tugas (Centang jika selesai)</th>
+          <th class="w-1/12">Kehadiran</th>
+          <th class="w-2/12">Link / Barcode</th>
+          <th class="w-2/12">Keterangan</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-roster" class="text-sm"></tbody>
+    </table>
+
+    <button id="save-btn" aria-label="Simpan semua data roster">Simpan Semua Data</button>
+  </div>
+
+<script>
+  const jadwal = [
+    {id:'senin1', hari:'Senin', jam:'09.10 – 10.50', matkul:'Manajemen Sarana dan Prasarana', dosen:'Dralwan Suban, M.M.'},
+    {id:'senin2', hari:'Senin', jam:'10.50 – 12.30', matkul:'Akidah Akhlak', dosen:'Dr. Wahyuddin Rudding, M.Pd.I.'},
+    {id:'senin3', hari:'Senin', jam:'13.00 – 15.30', matkul:'Aplikasi Komputer Dasar', dosen:'Lisa Nurista, S.E., M.Si.'},
+    {id:'selasa1', hari:'Selasa', jam:'07.30 – 09.10', matkul:'English for Management', dosen:'Dr. Hj. Erni Sola, M.Pd.'},
+    {id:'selasa2', hari:'Selasa', jam:'09.10 – 10.50', matkul:'Manajemen Peserta Didik', dosen:'Muh. Anwar HM, S.Ag., M.Pd.'},
+    {id:'rabu1', hari:'Rabu', jam:'07.30 – 10.00', matkul:'Pengantar Ilmu Manajemen dan Administrasi Pendidikan', dosen:'Muh. Anwar HM, S.Ag., M.Pd.'},
+    {id:'kamis1', hari:'Kamis', jam:'07.30 – 09.10', matkul:'Pendidikan Pancasila dan Kewarganegaraan', dosen:'Dr. Hj. Musdiafiah, M.Pd.I.'},
+    {id:'kamis2', hari:'Kamis', jam:'09.10 – 10.50', matkul:'Ilmu Hadis', dosen:'Dr. H. Muhammad Yahya, M.Ag.'},
+    {id:'kamis3', hari:'Kamis', jam:'10.50 – 12.30', matkul:'Psikologi Perkembangan', dosen:'Ahmad Alif, S.Ag., M.Si.'}
+  ];
+
+  const mingguMax = 6;
+  let mingguAktif = 1;
+
+  const tbody = document.getElementById('tbody-roster');
+  const weekSelect = document.getElementById('week-select');
+  const saveBtn = document.getElementById('save-btn');
+
+  function getStorageKey(minggu, id) {
+    return semester1_minggu${minggu}_${id};
+  }
+
+  function renderTable() {
+    tbody.innerHTML = '';
+    jadwal.forEach(item => {
+      const key = getStorageKey(mingguAktif, item.id);
+      const saved = JSON.parse(localStorage.getItem(key)) || {};
+      const perubahan = saved.perubahan || '';
+      const tugasAda = saved.tugasAda || false;
+      const tugasDesc = saved.tugasDesc || '';
+      const tugasSelesai = saved.tugasSelesai || false;
+      const hadir = saved.hadir || 'ya';
+      const linkBarcode = saved.linkBarcode || '';
+      const keterangan = saved.keterangan || '';
+
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-id', item.id);
+
+      tr.innerHTML = `
+        <td><strong>${item.hari}</strong><br><span class="jam">${item.jam}</span></td>
+        <td>${item.matkul}</td>
+        <td class="dosen">${item.dosen}</td>
+        <td><textarea placeholder="Isi perubahan jadwal...">${perubahan}</textarea></td>
+        <td>
+          <label class="inline-flex"><input type="checkbox" class="tugas-ada" ${tugasAda ? 'checked' : ''}> Ada Tugas</label><br>
+          <textarea class="tugas-desc" placeholder="Deskripsi tugas..." ${tugasAda ? '' : 'disabled'}>${tugasDesc}</textarea><br>
+          <label class="inline-flex"><input type="checkbox" class="tugas-selesai" ${tugasSelesai ? 'checked' : ''} ${tugasAda ? '' : 'disabled'}> Selesai</label>
+        </td>
+        <td>
+          <select class="hadir-select" aria-label="Kehadiran">
+            <option value="ya" ${hadir === 'ya' ? 'selected' : ''}>Masuk Kelas</option>
+            <option value="tidak" ${hadir === 'tidak' ? 'selected' : ''}>Tidak Masuk</option>
+          </select>
+        </td>
+        <td>
+          <input type="url" class="link-barcode" placeholder="URL link atau barcode" value="${linkBarcode}">
+          ${linkBarcode ? <img src="${linkBarcode}" alt="Barcode" class="barcode-preview"> : ''}
+        </td>
+        <td><textarea placeholder="Keterangan tambahan...">${keterangan}</textarea></td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+    attachEvents();
+  }
+
+  function attachEvents() {
+    document.querySelectorAll('.tugas-ada').forEach(chk => {
+      chk.addEventListener('change', e => {
+        const row = e.target.closest('tr');
+        const desc = row.querySelector('.tugas-desc');
+        const selesai = row.querySelector('.tugas-selesai');
+        if(e.target.checked) {
+          desc.disabled = false;
+          selesai.disabled = false;
+        } else {
+          desc.disabled = true;
+          selesai.disabled = true;
+          desc.value = '';
+          selesai.checked = false;
+        }
+      });
+    });
+
+    document.querySelectorAll('.link-barcode').forEach(input => {
+      input.addEventListener('input', e => {
+        const url = e.target.value.trim();
+        const td = e.target.parentElement;
+        let img = td.querySelector('img.barcode-preview');
+        if(url) {
+          if(!img) {
+            img = document.createElement('img');
+            img.className = 'barcode-preview';
+            td.appendChild(img);
+          }
+          img.src = url;
+        } else {
+          if(img) img.remove();
+        }
+      });
+    });
+  }
+
+  function saveData() {
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+      const id = row.getAttribute('data-id');
+      const perubahan = row.querySelector('td:nth-child(4) textarea').value.trim();
+      const tugasAda = row.querySelector('.tugas-ada').checked;
+      const tugasDesc = row.querySelector('.tugas-desc').value.trim();
+      const tugasSelesai = row.querySelector('.tugas-selesai').checked;
+      const hadir = row.querySelector('.hadir-select').value;
+      const linkBarcode = row.querySelector('.link-barcode').value.trim();
+      const keterangan = row.querySelector('td:nth-child(8) textarea').value.trim();
+
+      const data = {perubahan, tugasAda, tugasDesc, tugasSelesai, hadir, linkBarcode, keterangan};
+      localStorage.setItem(getStorageKey(mingguAktif, id), JSON.stringify(data));
+    });
+    alert('Data minggu ' + mingguAktif + ' berhasil disimpan!');
+  }
+
+  weekSelect.addEventListener('change', e => {
+    mingguAktif = parseInt(e.target.value);
+    renderTable();
+  });
+
+  saveBtn.addEventListener('click', saveData);
+
+  // Inisialisasi render
+  renderTable();
+</script>
+</body>
+</html>
